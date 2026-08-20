@@ -1,0 +1,44 @@
+# Responsible AI & Limitations
+
+This project forecasts short-term metro passenger inflow to help control-room staff
+act *before* congestion forms. The forecast is **advisory only** — it supports human
+dispatch decisions and does not control trains, gates, or any automated action.
+
+## Privacy & data protection
+- The model is trained only on **aggregate counts** — the number of taps per station
+  per 15-minute interval. No individual passenger identities, card IDs, trip origins,
+  destinations, biometric data, or personal information are used at any stage.
+- Raw automatic-fare-collection (AFC) records are reduced to station-level totals during
+  aggregation (`notebooks/01_aggregate.ipynb`), so nothing traceable to a person is
+  stored, modeled, or displayed.
+- Data source: HZMetro (Hangzhou Metro), released under **CC-BY 4.0**; attribution is
+  provided in the README and dataset citation.
+
+## Fairness & representativeness
+- The dataset covers **a single city (Hangzhou) over 25 days** (1–25 Jan 2019). It is not
+  representative of other networks, ridership cultures, calendars, or holiday patterns.
+- Errors are **not uniform across the network**: busy stations have higher absolute error,
+  while quiet stations have the highest *relative* error. Acting on the raw prediction
+  without accounting for this could under-serve low-traffic stations. The crowding bands
+  and error analysis (`notebooks/04_error_analysis.ipynb`) are intended to keep this visible.
+- No demographic or protected-attribute data is present, so the model cannot encode bias
+  against individuals — but station-level and time-of-day disparities in accuracy are a real
+  fairness consideration for how the tool is used operationally.
+
+## Safety & appropriate use
+- **Appropriate:** an operator-facing early-warning signal, one input among CCTV, staff
+  observation, and scheduling.
+- **Inappropriate:** autonomous train/gate control; safety-critical decisions made on the
+  forecast alone; treating a point prediction as a guarantee (it carries error, largest at
+  the morning peak).
+- The model should be retrained/recalibrated before any real deployment, on data from the
+  actual target network.
+
+## Key limitations
+- **Short window (25 days):** captures intra-day and weekly patterns, but **no seasonality**,
+  holidays beyond the sample, weather effects, or special events.
+- **No direct transfer to Tashkent:** Tashkent is the motivating context, not a deployment
+  claim. Different topology, ridership culture, and calendar mean a Hangzhou-trained model
+  would not be valid there without new local data. This is documented as a limitation, not
+  hidden.
+- **Point forecasts only:** no prediction intervals / uncertainty are surfaced to the user.
