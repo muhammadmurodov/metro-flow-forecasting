@@ -24,6 +24,9 @@ station_names = load_names()
 inflow_art, outflow_art = load_models()
 df = load_data()
 
+# columns any model may need — used to validate a selected interval has full history
+FEATURE_UNION = sorted(set(inflow_art["features"]) | set(outflow_art["features"]))
+
 st.title("🚇 Metro Passenger Flow Forecast")
 st.write("Predict passenger flow for the next 15-minute interval at a station.")
 
@@ -36,6 +39,11 @@ station = st.selectbox(
     format_func=lambda sid: f"{station_names.get(sid, sid)} (#{sid})"
 )
 station_rows = df[df["stationID"] == station].sort_values("interval")
+
+if station_rows.empty:
+    st.warning("No flow data available for this station. Please choose another station.")
+    st.stop()
+
 times = station_rows["interval"].dt.strftime("%Y-%m-%d %H:%M").tolist()
 chosen = st.selectbox("Current time", times, index=len(times)//2)
 
@@ -62,16 +70,34 @@ if st.button("Predict next 15 min"):
     row = station_rows[station_rows["interval"] == chosen_ts]
     next_ts = chosen_ts + pd.Timedelta(minutes=15)
 
+    # input validation: the selected interval must exist and be complete
+    if row.empty:
+        st.error("No data for the selected time. Please pick another interval.")
+        st.stop()
+    if not show:
+        st.info("Select at least one direction (inflow or outflow) to forecast.")
+        st.stop()
+    if row[FEATURE_UNION].isnull().any().any():
+        st.warning(
+            "This interval is too early in the day to have the required history "
+            "(lag features). Please choose a later time."
+        )
+        st.stop()
+
     # metric cards
     cols = st.columns(len(show))
     preds = {}
-    for col, (tcol, name, art, color) in zip(cols, show):
-        p = float(art["model"].predict(row[art["features"]])[0])
-        preds[tcol] = p
-        with col:
-            st.metric(f"Predicted {name}", f"{p:.0f}")
-            st.write(f"Crowding: **{band(p)}**")
-            st.caption(f"(Actual: {int(row[tcol].iloc[0])})")
+    try:
+        for col, (tcol, name, art, color) in zip(cols, show):
+            p = float(art["model"].predict(row[art["features"]])[0])
+            preds[tcol] = p
+            with col:
+                st.metric(f"Predicted {name}", f"{p:.0f}")
+                st.write(f"Crowding: **{band(p)}**")
+                st.caption(f"(Actual: {int(row[tcol].iloc[0])})")
+    except Exception as e:
+        st.error(f"Prediction failed for this input: {e}")
+        st.stop()
 
     # recent-flow chart
     history = station_rows[station_rows["interval"] <= chosen_ts].tail(12)
