@@ -1,12 +1,7 @@
 # Metro Passenger Flow Forecasting
 
 **🔗 Live demo:** https://metro-flow-forecasting.streamlit.app
-
-**▶️ Run the demo notebook:** [`notebooks/05_demo.ipynb`](notebooks/05_demo.ipynb) — [![Open In Colab]
-
-(https://colab.research.google.com/assets/colab-badge.svg)]
-
-(https://colab.research.google.com/github/muhammadmurodov/metro-flow-forecasting/blob/main/notebooks/05_demo.ipynb) (station + time → forecast, runs top-to-bottom from a clean runtime)
+**▶️ Run the demo notebook:** [`notebooks/05_demo.ipynb`](notebooks/05_demo.ipynb) — [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/muhammadmurodov/metro-flow-forecasting/blob/main/notebooks/05_demo.ipynb) (station + time → forecast, runs top-to-bottom from a clean runtime)
 
 Short-term (15-minute) metro passenger inflow forecasting for station-level
 crowd management. AI/ML Fundamentals Capstone.
