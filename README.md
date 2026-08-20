@@ -1,6 +1,7 @@
 # Metro Passenger Flow Forecasting
 
 **🔗 Live demo:** https://metro-flow-forecasting.streamlit.app
+**▶️ Run the demo notebook:** [`notebooks/05_demo.ipynb`](notebooks/05_demo.ipynb) — [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/muhammadmurodov/metro-flow-forecasting/blob/main/notebooks/05_demo.ipynb) (station + time → forecast, runs top-to-bottom from a clean runtime)
 
 Short-term (15-minute) metro passenger inflow forecasting for station-level
 crowd management. AI/ML Fundamentals Capstone.
@@ -44,6 +45,7 @@ Then run the notebooks in order:
 2. `02_eda.ipynb` — EDA, leakage-safe split, feature engineering
 3. `03_models.ipynb` — baseline, Ridge, XGBoost, MLflow tracking, saved artifact
 4. `04_error_analysis.ipynb` — error by peak/off-peak and station busyness
+5. `05_demo.ipynb` — clean input→output demo: station + timestamp → forecast + crowding band
 
 ## Method
 - **Task:** supervised time-series regression (next-interval inflow)
@@ -54,15 +56,23 @@ Then run the notebooks in order:
 
 ## Repository structure
 data/processed/ aggregated 15-min flow tables
-notebooks/ pipeline notebooks (01–04)
+notebooks/ pipeline notebooks (01–05, incl. demo)
 artifacts/ saved model + loading docs
 reports/ Model Gate evidence + figures
+docs/ responsible-AI write-up
+presentation/ defense slides
 
-## Limitations
-- 25 days of data — captures intra-day and weekly patterns, not seasonality.
-- Trained on Hangzhou; does not transfer directly to Tashkent (different
-  topology, ridership culture, calendar). Tashkent is motivation, not a
-  deployment claim.
+## Responsible AI & Limitations
+Full write-up: [`docs/RESPONSIBLE_AI_AND_LIMITATIONS.md`](docs/RESPONSIBLE_AI_AND_LIMITATIONS.md).
+
+- **Advisory only:** supports human dispatch decisions; does not control trains or gates.
+- **Privacy:** trained on aggregate 15-min counts only — no passenger identities, trips, or
+  biometric/personal data.
+- **Fairness:** single city (Hangzhou); accuracy varies by station and time of day (quiet
+  stations have the highest *relative* error), which matters for how the tool is used.
+- **Limitations:** 25 days → no seasonality; does **not** transfer directly to Tashkent
+  (different topology, ridership culture, calendar) — Tashkent is motivation, not a
+  deployment claim; point forecasts only (no uncertainty surfaced).
 
 ## License
 Code: for educational use. Data: CC-BY 4.0 (Hangzhou Metro / Tianchi).
