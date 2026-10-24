@@ -1,0 +1,54 @@
+{
+  "data": "HZMetro Hangzhou, Jan 2019; not Tashkent",
+  "splits": {
+    "test": 28356,
+    "train": 100163,
+    "val": 11123
+  },
+  "targets": {
+    "inflow": {
+      "validation": {
+        "mae": 24.312339782714844,
+        "rmse": 39.937334946842036
+      },
+      "test": {
+        "mae": 28.059511184692383,
+        "rmse": 51.193804938317484
+      },
+      "test_baseline": {
+        "mae": 40.37262987987148,
+        "rmse": 75.79469381377335
+      },
+      "validation_abs_error_q90": 52.38531494140628,
+      "test_interval_coverage_at_q90": 0.8630977570884469,
+      "test_wape": 0.12699821816651635,
+      "peak_test_mae": {
+        "evening": 37.12758743842443,
+        "morning": 47.865819998795004,
+        "offpeak": 20.671484286967093
+      }
+    },
+    "outflow": {
+      "validation": {
+        "mae": 22.69321632385254,
+        "rmse": 39.97926708776688
+      },
+      "test": {
+        "mae": 25.743019104003906,
+        "rmse": 48.45400424468291
+      },
+      "test_baseline": {
+        "mae": 41.63296907361074,
+        "rmse": 76.71369744342664
+      },
+      "validation_abs_error_q90": 48.41302490234376,
+      "test_interval_coverage_at_q90": 0.8645083932853717,
+      "test_wape": 0.11739468833543196,
+      "peak_test_mae": {
+        "evening": 39.24172601898511,
+        "morning": 35.68066762024772,
+        "offpeak": 19.74608334303631
+      }
+    }
+  }
+}
